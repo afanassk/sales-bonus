@@ -79,6 +79,8 @@ function analyzeSalesData(data, options) {
         const seller = sellerIndex[record.seller_id];
         if (!seller) return;
 
+        seller.sales_count += 1;
+
         record.items.forEach(item => {
             const product = productIndex[item.sku];
             if (!product) return;
@@ -89,8 +91,6 @@ function analyzeSalesData(data, options) {
 
             seller.revenue += revenue;
             seller.profit += profit;
-
-            seller.sales_count += 1;
 
             if (!seller.products_sold[item.sku]) {
                 seller.products_sold[item.sku] = 0;
