@@ -89,14 +89,15 @@ function analyzeSalesData(data, options) {
 
             seller.revenue += revenue;
             seller.profit += profit;
-            seller.sales_count += item.quantity;
+
+            seller.sales_count += 1;
 
             if (!seller.products_sold[item.sku]) {
                 seller.products_sold[item.sku] = 0;
             }
             seller.products_sold[item.sku] += item.quantity;
         });
-     });
+    });
 
     // Сортировка продавцов по прибыли
     sellerStats.sort((a, b) => b.profit - a.profit);
