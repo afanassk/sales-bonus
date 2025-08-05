@@ -75,34 +75,28 @@ function analyzeSalesData(data, options) {
     const productIndex = Object.fromEntries(data.products.map(product => [product.sku, product]));
 
     // Расчет выручки и прибыли для каждого продавца
-    // Расчет выручки и прибыли для каждого продавца
     data.purchase_records.forEach(record => {
         const seller = sellerIndex[record.seller_id];
         if (!seller) return;
-
-        // Увеличить количество продаж (по чекам)
-        seller.sales_count += 1;
-
-        // Увеличить выручку по чеку (без скидки − скидка)
-        seller.revenue += record.total_amount - record.total_discount;
 
         record.items.forEach(item => {
             const product = productIndex[item.sku];
             if (!product) return;
 
-            const cost = product.purchase_price * item.quantity;
             const revenue = calculateRevenue(item, product);
+            const cost = product.purchase_price * item.quantity;
             const profit = revenue - cost;
 
+            seller.revenue += revenue;
             seller.profit += profit;
+            seller.sales_count += item.quantity;
 
-            // Учёт количества проданных товаров
             if (!seller.products_sold[item.sku]) {
                 seller.products_sold[item.sku] = 0;
             }
             seller.products_sold[item.sku] += item.quantity;
         });
-    });
+     });
 
     // Сортировка продавцов по прибыли
     sellerStats.sort((a, b) => b.profit - a.profit);
