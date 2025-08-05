@@ -11,6 +11,7 @@ function calculateSimpleRevenue(purchase, _product) {
     return sale_price * quantity * discountRate;
 }
 
+
 /**
  * Функция для расчета бонусов
  * @param index порядковый номер в отсортированном массиве
@@ -22,15 +23,15 @@ function calculateBonusByProfit(index, total, seller) {
     // Расчет бонуса от позиции в рейтинге
     const { profit } = seller;
 
-        if (index === 0) {
-            return profit * 0.15;
-        } else if (index === 1 || index === 2) {
-            return profit * 0.10;
-        } else if (index === total - 1) {
-            return 0;
-        } else {
-            return profit * 0.05;
-        }
+    if (index === 0) {
+        return +((profit * 0.15).toFixed(2));
+    } else if (index === 1 || index === 2) {
+        return +((profit * 0.10).toFixed(2));
+    } else if (index === total - 1) {
+        return 0;
+    } else {
+        return +((profit * 0.05).toFixed(2));
+    }
 }
 
 /**
@@ -106,7 +107,7 @@ function analyzeSalesData(data, options) {
     const total = sellerStats.length;
 
     sellerStats.forEach((seller, index) => {
-        seller.bonus = +calculateBonus(index, total, seller).toFixed(2);
+        seller.bonus = calculateBonus(index, total, seller);
 
         seller.top_products = Object.entries(seller.products_sold)
             .map(([sku, quantity]) => ({ sku, quantity }))
