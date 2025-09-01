@@ -113,6 +113,17 @@ function analyzeSalesData(data, options) {
     sellerStats.sort((a, b) => b.profit - a.profit);
 
     // @TODO: Назначение премий на основе ранжирования
+    // Формирование топ-10 товаров
+    // Расчет бонусов и формирование топ-10 товаров
+    sellerStats.forEach((seller, index) => {
+        seller.bonus = calculateBonus(index, sellerStats.length, seller);
+
+        // Формирование топ-10 товаров
+        seller.top_products = Object.entries(seller.products_sold)
+            .map(([sku, quantity]) => ({ sku, quantity }))
+            .sort((a, b) => b.quantity - a.quantity)
+            .slice(0, 10);
+    });
 
     // @TODO: Подготовка итоговой коллекции с нужными полями
 }
