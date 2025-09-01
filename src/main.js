@@ -41,6 +41,15 @@ function analyzeSalesData(data, options) {
     }
 
     // @TODO: Проверка наличия опций
+    const { calculateRevenue, calculateBonus } = options;
+    if (!calculateRevenue || !calculateBonus) {
+        throw new Error('Не переданы необходимые функции для расчетов');
+    }
+
+    if (typeof calculateRevenue !== 'function' || typeof calculateBonus !== 'function') {
+        throw new Error('Некорректные функции в опциях');
+    }
+
 
     // @TODO: Подготовка промежуточных данных для сбора статистики
 
