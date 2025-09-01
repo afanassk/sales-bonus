@@ -9,6 +9,7 @@ function calculateSimpleRevenue(purchase, _product) {
     // purchase — это одна из записей в поле items из чека в data.purchase_records
     // _product — это продукт из коллекции data.products
     const { discount, sale_price, quantity } = purchase;
+    return sale_price * quantity * (1 - (discount || 0) / 100);
 }
 
 /**
