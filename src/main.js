@@ -10,6 +10,7 @@ function calculateSimpleRevenue(purchase, _product) {
     // _product — это продукт из коллекции data.products
     const { discount, sale_price, quantity } = purchase;
     return sale_price * quantity * (1 - (discount || 0) / 100);
+    return +revenue.toFixed(2); // Округление до сотых
 }
 
 /**
@@ -23,13 +24,13 @@ function calculateBonusByProfit(index, total, seller) {
     // @TODO: Расчет бонуса от позиции в рейтинге
     const { profit } = seller;
     if (index === 0) {
-        return seller.profit * 0.15; // для первого места
+        return seller.profit * 0.15;
     } else if (index === 1 || index === 2) {
-        return seller.profit * 0.1; // для второго и третьего места
+        return seller.profit * 0.1;
     } else if (index === total - 1) {
-        return 0; // 0 для последнего места
+        return 0;
     } else {
-        return seller.profit * 0.05; // 5% для всех остальных
+        return seller.profit * 0.05;
     }
 }
 
@@ -41,23 +42,18 @@ function calculateBonusByProfit(index, total, seller) {
  */
 function analyzeSalesData(data, options) {
     // @TODO: Проверка входных данных
-    if (
-        !data 
-        || !Array.isArray(data.sellers) || data.sellers.length === 0
-        || !Array.isArray(data.products) || data.products.length === 0
-        || !Array.isArray(data.purchase_records) || data.purchase_records.length === 0
+    if (!data || !Array.isArray(data.sellers) ||
+        !Array.isArray(data.products) ||
+        !Array.isArray(data.purchase_records) ||
+        data.sellers.length === 0 || data.products.length === 0 || data.purchase_records.length === 0
     ) {
         throw new Error('Некорректные входные данные');
-    }
+	}
 
     // @TODO: Проверка наличия опций
     const { calculateRevenue, calculateBonus } = options;
     if (!calculateRevenue || !calculateBonus) {
         throw new Error('Не переданы необходимые функции для расчетов');
-    }
-
-    if (typeof calculateRevenue !== 'function' || typeof calculateBonus !== 'function') {
-        throw new Error('Некорректные функции в опциях');
     }
 
     // @TODO: Подготовка промежуточных данных для сбора статистики
@@ -86,8 +82,6 @@ function analyzeSalesData(data, options) {
         record.items.forEach(item => {
             const product = productIndex[item.sku]; // Товар
             if (!product) return;
-
-            seller.sales_count += 1;
 
             // Посчитать себестоимость (cost) товара как product.purchase_price, умноженную на количество товаров из чека
             const cost = product.purchase_price * item.quantity;
